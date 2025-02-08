@@ -8,7 +8,7 @@ async def echo_handler(message: types.message):
 
 async def main():
     start.register_handlers(dp)
-    pic.pic_handlers(dp)
+    pic.register_handlers(dp)
     my_info.register_handlers(dp)
     random.register_handlers(dp)
 
