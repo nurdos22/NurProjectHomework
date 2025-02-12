@@ -1,7 +1,10 @@
 from aiogram import Dispatcher
 from aiogram.types import Message, CallbackQuery
+from aiogram.dispatcher.filters import Text
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import StatesGroup, State
+
+from bot_config import database
 
 class Complaint(StatesGroup):
     name = State()
@@ -10,12 +13,11 @@ class Complaint(StatesGroup):
     comments = State()
 
 async def start_dialog_callback(callback: CallbackQuery):
-    """Обработчик для кнопки 'Оставить отзыв'"""
+
     await callback.message.answer("Как вас зовут?")
     await Complaint.name.set()
 
 async def start_dialog_command(message: Message):
-    """Обработчик для команды /review"""
     await message.answer("Как вас зовут?")
     await Complaint.name.set()
 
@@ -47,8 +49,8 @@ async def process_thanks(message: Message, state: FSMContext):
     await message.answer("Спасибо за отзыв!")
 
 def register_review_handlers(dp: Dispatcher):
-    dp.register_callback_query_handler(start_dialog_callback, lambda c: c.data == "review")  # Кнопка "Оставить отзыв"
-    dp.register_message_handler(start_dialog_command, commands=['review'])  # Команда "/review"
+    dp.register_callback_query_handler(start_dialog_callback, lambda c: c.data == "review")
+    dp.register_message_handler(start_dialog_command, commands=['review'])
     dp.register_message_handler(process_insta, state=Complaint.name)
     dp.register_message_handler(process_rate, state=Complaint.instagram)
     dp.register_message_handler(process_text, state=Complaint.rate)
