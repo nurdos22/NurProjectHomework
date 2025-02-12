@@ -1,6 +1,17 @@
 from aiogram import  Dispatcher
-from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
 from bot_config import bot
+from handler.complaint_dialog import register_review_handlers
+
+from aiogram.types import (
+
+    Message,
+    InlineKeyboardMarkup,
+    InlineKeyboardButton,
+    CallbackQuery,
+
+)
+
+
 
 
 async def start_handler(message: Message):
@@ -12,6 +23,12 @@ async def start_handler(message: Message):
             InlineKeyboardButton(text='📸 Instagram ', url='https://www.instagram.com/'),
             InlineKeyboardButton(text='🍕 Меню ', callback_data="menu"),
 
+
+        ],
+
+
+        [
+            InlineKeyboardButton(text='Оставить отзыв', callback_data="review"),
         ]
     ])
 
@@ -34,3 +51,4 @@ async def send_menu(callback_query: CallbackQuery):
 def register_handlers(dp: Dispatcher):
     dp.register_message_handler(start_handler, commands=['start'])
     dp.register_callback_query_handler(send_menu, lambda c: c.data == "menu")
+    register_review_handlers(dp)
