@@ -9,24 +9,24 @@ class Complaint(StatesGroup):
     rate = State()
     comments = State()
 
-async def start_dialog(callback: CallbackQuery):
+async def start_dialog_callback(callback: CallbackQuery):
+    """Обработчик для кнопки 'Оставить отзыв'"""
     await callback.message.answer("Как вас зовут?")
     await Complaint.name.set()
 
+async def start_dialog_command(message: Message):
+    """Обработчик для команды /review"""
+    await message.answer("Как вас зовут?")
+    await Complaint.name.set()
 
 async def process_insta(message: Message, state: FSMContext):
-
-    print(f"Получено имя: {message.text}")
-
     try:
-        name = message.text
         async with state.proxy() as data:
-            data["name"] = name
+            data["name"] = message.text
         await Complaint.instagram.set()
         await message.answer("Ваш логин в инсте?")
     except Exception as e:
         await message.answer(f"Ошибка: {str(e)}. Пожалуйста, повторите попытку")
-
 
 async def process_rate(message: Message, state: FSMContext):
     async with state.proxy() as data:
@@ -47,7 +47,8 @@ async def process_thanks(message: Message, state: FSMContext):
     await message.answer("Спасибо за отзыв!")
 
 def register_review_handlers(dp: Dispatcher):
-    dp.register_callback_query_handler(start_dialog, lambda c: c.data == "review")
+    dp.register_callback_query_handler(start_dialog_callback, lambda c: c.data == "review")  # Кнопка "Оставить отзыв"
+    dp.register_message_handler(start_dialog_command, commands=['review'])  # Команда "/review"
     dp.register_message_handler(process_insta, state=Complaint.name)
     dp.register_message_handler(process_rate, state=Complaint.instagram)
     dp.register_message_handler(process_text, state=Complaint.rate)

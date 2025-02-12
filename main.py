@@ -1,15 +1,6 @@
 import asyncio
-
-from bot_config import dp, types
-
-from handler import (
-    start,
-    complaint_dialog,
-    other_message,
-    pic
-)
-
-from handler import start, pic, other_message, my_info, random, complaint_dialog
+from bot_config import bot, dp, types
+from handler import start, pic, other_message, my_info, random, complaint_dialog, Set_commands
 
 async def echo_handler(message: types.message):
     text = message.text
@@ -17,6 +8,7 @@ async def echo_handler(message: types.message):
 
 async def main():
     start.register_handlers(dp)
+    Set_commands.register_handlers(dp)
     pic.register_handlers(dp)
     my_info.register_handlers(dp)
     random.register_handlers(dp)
@@ -24,7 +16,10 @@ async def main():
 
 
 
+
+
     other_message.register_handlers(dp)
+    await Set_commands.set_commands(bot)
     await dp.start_polling()
 
 

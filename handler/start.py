@@ -1,3 +1,5 @@
+from distutils.dist import command_re
+
 from aiogram import  Dispatcher
 from bot_config import bot
 from handler.complaint_dialog import register_review_handlers
@@ -47,6 +49,7 @@ async def send_menu(callback_query: CallbackQuery):
         [f" {item['name']} - {item['price']}" for item in menu_items]
     )
     await bot.send_message(callback_query.from_user.id, menu_text)
+
 
 def register_handlers(dp: Dispatcher):
     dp.register_message_handler(start_handler, commands=['start'])

@@ -5,7 +5,7 @@ from aiogram.types import Message
 import random
 
 
-random_user = ['Artur', 'Amir', 'Janat', 'Kaira']
+random_user = ['Artur', 'Amir', 'Janat', 'Kairat']
 
 async def random_handler(message: Message):
     random_name = random.choice(random_user)
