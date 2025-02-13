@@ -1,5 +1,5 @@
 import asyncio
-from bot_config import bot, dp, types
+from bot_config import bot, dp, types, database
 from handler import start, pic, other_message, my_info, random, complaint_dialog, Set_commands
 
 async def echo_handler(message: types.message):
@@ -19,7 +19,9 @@ async def main():
 
 
     other_message.register_handlers(dp)
+    database.create_tables()
     await Set_commands.set_commands(bot)
+
     await dp.start_polling()
 
 
