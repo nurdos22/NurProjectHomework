@@ -1,29 +1,36 @@
 import asyncio
-from bot_config import bot, dp, types, database
-from handler import start, pic, other_message, my_info, random, complaint_dialog, Set_commands
+import logging
+from aiogram import executor
+from bot_config import dp, database, ADMINS, bot
+from handler import (start, other_message,
+                      complaint_dialog, store_fsm)
 
-async def echo_handler(message: types.message):
-    text = message.text
-    await message.answer(text)
 
-async def main():
-    start.register_handlers(dp)
-    Set_commands.register_handlers(dp)
-    pic.register_handlers(dp)
-    my_info.register_handlers(dp)
-    random.register_handlers(dp)
-    complaint_dialog.register_review_handlers(dp)
+async def on_startup(_):
+    for admin in ADMINS:
+        await bot.send_message(chat_id=admin,
+                               text='Бот включен!')
 
 
 
+async def on_shutdown(_):
+    for admin in ADMINS:
+        await bot.send_message(chat_id=admin,
+                               text='Бот выключен!')
+
+start.register_handlers(dp)
+picture.register_handlers(dp)
+complaint_dialog.register_handlers(dp)
+store_fsm.register_handlers(dp)
 
 
-    other_message.register_handlers(dp)
-    database.create_tables()
-    await Set_commands.set_commands(bot)
-
-    await dp.start_polling()
+other_message.register_handlers(dp)
+database.create_tables()
 
 
-if __name__ == '__main__':
-    asyncio.run(main())
+
+if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO)
+    executor.start_polling(dp, skip_updates=True,
+                           on_startup=on_startup,
+                           on_shutdown=on_shutdown)
