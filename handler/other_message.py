@@ -1,11 +1,10 @@
 from aiogram import Dispatcher, types
 
 
-# @db.message_handler()
 async def echo_handler(message):
-    text = message.text  # текст ссобщения
-    # await message.answer("Я вас не понимаю")
+    text = message.text
     await message.reply("Я вас не понимаю")
+
 
 
 def register_handlers(dp: Dispatcher):

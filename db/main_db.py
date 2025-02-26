@@ -25,6 +25,15 @@ async def sql_insert_store_details(category, product_id):
                    (category, product_id))
     db.commit()
 
+async def sql_insert_collection_query(product_id, collection):
+    try:
+        cursor.execute(queries.INSERT_collection_query, (product_id, collection))
+        db.commit()
+    except Exception as e:
+        print(f"Ошибка при добавлении коллекции: {e}")
+
+
+
 
 # ==========================================================
 
@@ -41,6 +50,12 @@ def fetch_all_products():
     INNER JOIN store_details sd on s.product_id = sd.product_id
     """).fetchall()
     conn.close()
-    return products
+    return
 
+
+# def update_product_field(product_id, field_name, new_value):
+#     conn = get_db_connection()
+#
+#     store_table = ['name_product', 'price', 'size', 'product_id']
+#
 
